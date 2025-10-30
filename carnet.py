@@ -49,7 +49,16 @@ cpd_ignition = TabularCPD(
     state_names={"Ignition": ["Works", "Doesn't work"],
                  "Battery": ['Works',"Doesn't work"]}
 )
-
+# step2
+# cpd_starts = TabularCPD(
+#     variable="Starts",
+#     variable_card=2,
+#     values=[[0.95, 0.05, 0.05, 0.001], [0.05, 0.95, 0.95, 0.9999]],
+#     evidence=["Ignition", "Gas"],
+#     evidence_card=[2, 2],
+#     state_names={"Starts":['yes','no'], "Ignition":["Works", "Doesn't work"], "Gas":['Full',"Empty"]},
+# )
+# step3
 cpd_starts = TabularCPD(
     variable="Starts",
     variable_card=2,
@@ -91,6 +100,7 @@ car_infer = VariableElimination(car_model)
 
 
 def main() -> None:
+    # step2
     print("Q1: Given that the car will not move, what is the probability that the battery is not working?")
     battery_given_no_move = car_infer.query(
         variables=["Battery"], evidence={"Moves": "no"}
@@ -149,7 +159,7 @@ def main() -> None:
     )
     prob_start_yes = start_given_radio_and_gas.get_value(Starts="yes")
     print(f"   Answer: P(Starts=yes | Radio=turns on, Gas=Full) = {prob_start_yes:.5f}\n")
-
+    # step3
     print("Q6: Given that the car doesn't move, what is the probability that the key is not present?")
     key_absent_given_no_move = car_infer.query(
         variables=["KeyPresent"], evidence={"Moves": "no"}
